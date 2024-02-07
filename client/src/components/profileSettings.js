@@ -1,20 +1,9 @@
 import {
     Button,
-    Box,
-    Typography,
-    Divider,
     Grid,
-    Avatar,
     Paper,
     Container,
-    Link,
-    CssBaseline,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     TextField,
-    getAppBarUtilityClass,
     InputLabel,
 } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -22,14 +11,19 @@ import { useState, useEffect } from "react";
 export default function ProfileSettings({ user, jwt }) {
     const [foundUser, setFoundUser] = useState(null);
     const [userData, setUserData] = useState({});
+
+    // Fetch user data from the server when the component mounts
     useEffect(() => {
         dataFetch();
     }, []);
 
+    // Function to fetch user data from the server
     const dataFetch = async () => {
+        // Prepare data to send in the request
         const data = {
             _id: user.id,
         };
+        // Send a GET request to retrieve user data
         const response = await fetch("/users/userdata", {
             method: "GET",
             headers: {
@@ -37,17 +31,19 @@ export default function ProfileSettings({ user, jwt }) {
             },
             mode: "cors",
         });
-
+        // Parse the response as JSON
         const responseData = await response.json();
-
+        // If user data is found in the response, update the state
         if (responseData.foundUser) {
-            console.log(responseData.foundUser);
             setFoundUser(responseData.foundUser);
         }
     };
 
+    // Function to handle form submission
     async function handleSubmit(event) {
+        console.log(userData);
         event.preventDefault();
+        // Send a POST request to update user data
         const dataPromise = await fetch("/users/update-user", {
             method: "POST",
             headers: {
@@ -58,10 +54,13 @@ export default function ProfileSettings({ user, jwt }) {
             mode: "cors",
         });
 
+        // Parse the response as JSON
         const responseData = await dataPromise.json();
     }
 
+    // Function to handle input field changes
     const handleChange = (e) => {
+        // Update the userData state with the new input value
         setUserData({ ...userData, [e.target.name]: e.target.value });
     };
 
@@ -81,7 +80,7 @@ export default function ProfileSettings({ user, jwt }) {
                     >
                         <Grid item xs={12}>
                             <InputLabel
-                                htmlFor="firstName"
+                                htmlFor="firstname"
                                 sx={{
                                     textAlign: "left",
                                     fontSize: "1.2rem",
@@ -91,14 +90,16 @@ export default function ProfileSettings({ user, jwt }) {
                                 Firstname
                             </InputLabel>
                             <TextField
-                                id="firstName"
+                                required
+                                id="firstname"
+                                name="firstname"
                                 defaultValue={foundUser.firstName}
                                 fullWidth
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <InputLabel
-                                htmlFor="lastName"
+                                htmlFor="lastname"
                                 sx={{
                                     textAlign: "left",
                                     fontSize: "1.2rem",
@@ -108,8 +109,10 @@ export default function ProfileSettings({ user, jwt }) {
                                 Lastname
                             </InputLabel>
                             <TextField
-                                id="lastName"
+                                required
+                                id="lastname"
                                 defaultValue={foundUser.lastName}
+                                name="lastname"
                                 fullWidth
                             />
                         </Grid>

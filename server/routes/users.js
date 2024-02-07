@@ -1,9 +1,7 @@
 var express = require("express");
 const User = require("../models/User");
-//const Todo = require("../models/Todo");
 const passport = require("../auth/validateToken");
 const bcrypt = require("bcryptjs");
-const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
@@ -11,145 +9,111 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 var router = express.Router();
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-    res.send("respond with a resource");
-});
-
-//Register:
+// Register a new user
 router.post(
     "/register",
+    // Validate email and password
     body("email").isEmail(),
     body("password").isLength({ min: 8 }),
-    (req, res, next) => {
+    async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        User.findOne({ email: req.body.email }, (err, user) => {
-            if (err) {
-                console.log(err);
-                throw err;
-            }
-            if (user) {
+        try {
+            // Check if email already exists
+            const existingUser = await User.findOne({ email: req.body.email });
+            if (existingUser) {
                 return res.status(403).json({ email: "Email already in use." });
-            } else {
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(req.body.password, salt, (err, hash) => {
-                        if (err) {
-                            throw err;
-                        }
-                        User.create(
-                            {
-                                firstName: req.body.firstName,
-                                lastName: req.body.lastName,
-                                email: req.body.email,
-                                password: hash,
-                            },
-                            (err, ok) => {
-                                if (err) throw err;
-                                return res.json({
-                                    message: "registeration ok",
-                                });
-                            }
-                        );
-                    });
-                });
             }
-        });
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            // Create a new user
+            await User.create({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                password: hashedPassword,
+            });
+            return res.json({ message: "Registration successful" });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Failed to register user" });
+        }
     }
 );
 
-//Login:
-router.post(
-    "/login",
-    body("email").isEmail(),
-    body("password").isStrongPassword(),
-    (req, res, next) => {
-        User.findOne({ email: req.body.email }, (err, user) => {
-            if (err) throw err;
-            if (!user) {
-                return res.status(403).json({ message: "Invalid credentials" });
-            } else {
-                bcrypt.compare(
-                    req.body.password,
-                    user.password,
-                    (err, isMatch) => {
-                        if (err) {
-                            throw err;
-                        }
-                        if (isMatch) {
-                            const jwtPayload = {
-                                id: user._id,
-                                email: user.email,
-                            };
-                            jwt.sign(
-                                jwtPayload,
-                                "ABCD123",
-                                //process.env.SECRET,
-                                {
-                                    expiresIn: 30000,
-                                },
-                                (err, token) => {
-                                    res.json({ success: true, token });
-                                }
-                            );
-                        } else {
-                            return res
-                                .status(403)
-                                .json({ message: "Invalid credentials" });
-                        }
-                    }
-                );
-            }
-        });
+// Login user
+router.post("/login", body("email").isEmail(), async (req, res, next) => {
+    try {
+        // Find user by email
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) {
+            return res.status(403).json({ message: "Invalid credentials" });
+        }
+        // Compare passwords
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        if (!isMatch) {
+            return res.status(403).json({ message: "Invalid credentials" });
+        }
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            "ABCD123", // TODO Replace with env variable
+            { expiresIn: 30000 }
+        );
+        return res.json({ success: true, token });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Failed to login" });
     }
-);
+});
 
-//Get logged user's data:
+// Get logged-in user's data
 router.get(
     "/userdata",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
         try {
+            // Find user by ID
             const userData = await User.findOne({ _id: req.user._id });
-
-            res.json({
-                success: true,
-                foundUser: userData,
-            });
+            return res.json({ success: true, foundUser: userData });
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Failed to add user to liked users list",
-            });
+            console.error(error);
+            return res
+                .status(500)
+                .json({ success: false, message: "Failed to fetch user data" });
         }
     }
 );
 
-//Update user information:
+// Update user information
 router.post(
     "/update-user",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
         try {
+            // Check if email is already in use
+            const foundUser = await User.findOne({ email: req.body.email });
+            if (foundUser) {
+                return res.status(403).json({ email: "Email already in use." });
+            }
+            // Update user data
             await User.updateOne(
                 { _id: req.user._id },
                 {
                     $set: {
-                        firstName: req.body.firstName,
-                        lastName: req.body.lastName,
+                        firstName: req.body.firstname,
+                        lastName: req.body.lastname,
                         email: req.body.email,
                         profileText: req.body.profileText,
                     },
                 }
             );
-
-            res.json({
-                success: true,
-            });
+            return res.json({ success: true });
         } catch (error) {
-            res.status(500).json({
+            console.error(error);
+            return res.status(500).json({
                 success: false,
                 message: "Failed to update user information",
             });
@@ -157,7 +121,7 @@ router.post(
     }
 );
 
-//Get random user from database:
+// Get a random user from the database
 router.get(
     "/random",
     passport.authenticate("jwt", { session: false }),
@@ -167,41 +131,43 @@ router.get(
                 { $match: { _id: { $ne: req.user._id } } },
                 { $sample: { size: 1 } },
             ],
-            function (err, userObject) {
+            (err, userObject) => {
                 if (err) {
-                    throw err;
+                    console.error(err);
+                    return res
+                        .status(500)
+                        .json({ message: "Failed to get random user" });
                 }
                 if (userObject) {
                     return res.json({ foundUser: userObject[0] });
                 } else {
-                    res.json({ message: ["Error!"] });
+                    return res.json({ message: "No random user found" });
                 }
             }
         );
     }
 );
 
-//AddToLiked:
+// Add like
 router.post(
     "/addlike",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
         try {
+            // Add outgoing like
             await User.updateOne(
                 { _id: req.user._id },
                 { $addToSet: { outgoingLikes: req.body.likedUserId } }
             );
-
+            // Add incoming like
             await User.updateOne(
                 { _id: req.body.likedUserId },
                 { $addToSet: { incomingLikes: req.user._id.toString() } }
             );
-            res.json({
-                success: true,
-                message: "Likes added",
-            });
+            return res.json({ success: true, message: "Likes added" });
         } catch (error) {
-            res.status(500).json({
+            console.error(error);
+            return res.status(500).json({
                 success: false,
                 message: "Failed to add user to liked users list",
             });
