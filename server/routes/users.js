@@ -106,6 +106,57 @@ router.post(
     }
 );
 
+//Get logged user's data:
+router.get(
+    "/userdata",
+    passport.authenticate("jwt", { session: false }),
+    async (req, res) => {
+        try {
+            const userData = await User.findOne({ _id: req.user._id });
+
+            res.json({
+                success: true,
+                foundUser: userData,
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to add user to liked users list",
+            });
+        }
+    }
+);
+
+//Update user information:
+router.post(
+    "/update-user",
+    passport.authenticate("jwt", { session: false }),
+    async (req, res) => {
+        try {
+            await User.updateOne(
+                { _id: req.user._id },
+                {
+                    $set: {
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        email: req.body.email,
+                        profileText: req.body.profileText,
+                    },
+                }
+            );
+
+            res.json({
+                success: true,
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to update user information",
+            });
+        }
+    }
+);
+
 //Get random user from database:
 router.get(
     "/random",
@@ -134,24 +185,27 @@ router.get(
 router.post(
     "/addlike",
     passport.authenticate("jwt", { session: false }),
-    (req, res) => {
-        User.updateOne(
-            { _id: req.user._id },
-            { $addToSet: { likedUsers: req.body.likedUserId } }
-        )
-            .then((result) => {
-                console.log(req.body.likedUserId);
-                res.json({
-                    success: true,
-                    message: "User added to liked users list",
-                });
-            })
-            .catch((error) => {
-                res.status(500).json({
-                    success: false,
-                    message: "Failed to add user to liked users list",
-                });
+    async (req, res) => {
+        try {
+            await User.updateOne(
+                { _id: req.user._id },
+                { $addToSet: { outgoingLikes: req.body.likedUserId } }
+            );
+
+            await User.updateOne(
+                { _id: req.body.likedUserId },
+                { $addToSet: { incomingLikes: req.user._id.toString() } }
+            );
+            res.json({
+                success: true,
+                message: "Likes added",
             });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: "Failed to add user to liked users list",
+            });
+        }
     }
 );
 

@@ -48,7 +48,7 @@ function App() {
                         path="/settings"
                         element={
                             <ProtectedRoute user={user}>
-                                <ProfileSettingsPage />
+                                <ProfileSettingsPage user={user} jwt={jwt} />
                             </ProtectedRoute>
                         }
                     />

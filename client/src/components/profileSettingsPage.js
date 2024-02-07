@@ -1,11 +1,11 @@
 import TopBar from "./TopBar";
 import ProfileSettings from "./profileSettings";
 
-export default function ProfileSettingsPage() {
+export default function ProfileSettingsPage({ user, jwt }) {
     return (
         <div>
             <TopBar></TopBar>
-            <ProfileSettings></ProfileSettings>
+            <ProfileSettings user={user} jwt={jwt}></ProfileSettings>
         </div>
     );
 }

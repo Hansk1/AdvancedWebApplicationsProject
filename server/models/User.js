@@ -6,8 +6,10 @@ let userSchema = new Schema({
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String },
+    profileText: { type: String },
     password: { type: String },
-    likedUsers: { type: Array },
+    outgoingLikes: { type: Array },
+    incomingLikes: { type: Array },
 });
 
 module.exports = mongoose.model("users", userSchema);
