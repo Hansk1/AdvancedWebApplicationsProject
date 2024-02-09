@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 
 export default function ProfileSettings({ user, jwt }) {
     const [foundUser, setFoundUser] = useState(null);
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState([]);
 
     // Fetch user data from the server when the component mounts
     useEffect(() => {
@@ -41,7 +41,6 @@ export default function ProfileSettings({ user, jwt }) {
 
     // Function to handle form submission
     async function handleSubmit(event) {
-        console.log(userData);
         event.preventDefault();
         // Send a POST request to update user data
         const dataPromise = await fetch("/users/update-user", {
@@ -56,6 +55,10 @@ export default function ProfileSettings({ user, jwt }) {
 
         // Parse the response as JSON
         const responseData = await dataPromise.json();
+
+        if (responseData.foundUser) {
+            setFoundUser(...userData, responseData.foundUser);
+        }
     }
 
     // Function to handle input field changes

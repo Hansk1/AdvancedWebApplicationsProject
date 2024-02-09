@@ -1,11 +1,11 @@
 import TopBar from "./TopBar";
 import ChatBox from "./chatBox";
 
-export default function ChatPage() {
+export default function ChatPage({ jwt }) {
     return (
         <div>
             <TopBar></TopBar>
-            <ChatBox></ChatBox>
+            <ChatBox jwt={jwt}></ChatBox>
         </div>
     );
 }

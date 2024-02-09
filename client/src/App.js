@@ -39,7 +39,7 @@ function App() {
                         path="/chat"
                         element={
                             <ProtectedRoute user={user}>
-                                <ChatPage />
+                                <ChatPage jwt={jwt} />
                             </ProtectedRoute>
                         }
                     />

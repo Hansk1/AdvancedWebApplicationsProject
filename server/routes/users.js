@@ -28,8 +28,12 @@ router.post(
             }
             // Hash the password
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+            //Get the current date
+            const currentDate = new Date();
             // Create a new user
             await User.create({
+                registerationDate: currentDate.toISOString().split("T")[0],
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 email: req.body.email,
@@ -148,6 +152,26 @@ router.get(
     }
 );
 
+//Get user using id:
+router.get(
+    "/:id",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+        const userId = req.params.id;
+        User.findById(userId, (err, userObject) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Failed to get user" });
+            }
+            if (userObject) {
+                return res.json({ foundUser: userObject });
+            } else {
+                return res.json({ message: "User not found" });
+            }
+        });
+    }
+);
+
 // Add like
 router.post(
     "/addlike",
@@ -164,6 +188,20 @@ router.post(
                 { _id: req.body.likedUserId },
                 { $addToSet: { incomingLikes: req.user._id.toString() } }
             );
+
+            //If both users have liked each other, add their IDs to the chats list for both users
+            const likedUser = await User.findById(req.body.likedUserId);
+            if (likedUser.outgoingLikes.includes(req.user._id.toString())) {
+                await User.updateOne(
+                    { _id: req.user._id },
+                    { $addToSet: { chats: req.body.likedUserId } }
+                );
+                await User.updateOne(
+                    { _id: req.body.likedUserId },
+                    { $addToSet: { chats: req.user._id } }
+                );
+            }
+
             return res.json({ success: true, message: "Likes added" });
         } catch (error) {
             console.error(error);
