@@ -33,6 +33,7 @@ export default function ChatBox({ jwt }) {
                 alignItems="stretch"
                 direction="row"
                 justifyContent="flex-end"
+                sx={{ height: "40vh" }}
             >
                 {/* Chat list */}
                 <Grid item xs={4} lg={4}>
@@ -47,15 +48,11 @@ export default function ChatBox({ jwt }) {
                     sx={{
                         overflowY: "auto",
                         maxHeight: "50vh",
+                        height: "100%",
                     }}
                 >
                     <ChatWindow jwt={jwt} selectedChat={selectedChat} />
                 </Grid>
-                <Divider
-                    orientation="vertical"
-                    flexItem
-                    sx={{ mr: "-0.9px" }}
-                />
             </Grid>
         </Container>
     );

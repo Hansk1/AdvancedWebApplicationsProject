@@ -20,6 +20,7 @@ router.post(
                 sender: req.user._id,
                 receiver: req.body.receiver,
                 content: req.body.content,
+                date: req.body.date,
             });
             return res.json({ success: true });
         } catch (error) {

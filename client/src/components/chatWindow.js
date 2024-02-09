@@ -25,7 +25,11 @@ const ChatWindow = ({ jwt, selectedChat }) => {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        if (selectedChat) messagesFetch();
+        if (selectedChat) {
+            messagesFetch();
+            const intervalId = setInterval(messagesFetch, 2500);
+            return () => clearInterval(intervalId);
+        }
     }, [selectedChat]);
 
     const messagesFetch = async () => {
@@ -49,6 +53,7 @@ const ChatWindow = ({ jwt, selectedChat }) => {
         const data = {
             receiver: selectedChat,
             content: message,
+            date: new Date(),
         };
         event.preventDefault();
         // Send a POST request to update user data
@@ -75,65 +80,85 @@ const ChatWindow = ({ jwt, selectedChat }) => {
 
     return (
         <>
+            {!messages && (
+                <Box
+                    sx={{
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <Typography variant="h5">Select a chat</Typography>
+                </Box>
+            )}
             {messages && (
-                <List>
-                    {messages.map((message) => {
-                        return (
-                            <ListItem key={message._id}>
-                                <Grid container>
-                                    <Grid item xs={12}>
-                                        <ListItemText
-                                            align={
-                                                message.receiver ===
-                                                selectedChat
-                                                    ? "right"
-                                                    : "left"
-                                            }
-                                            primary={message.content}
-                                        ></ListItemText>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <ListItemText
-                                            align={
-                                                message.receiver ===
-                                                selectedChat
-                                                    ? "right"
-                                                    : "left"
-                                            }
-                                            secondary={
-                                                message.date.split("T")[1]
-                                            }
-                                        ></ListItemText>
-                                    </Grid>
+                <List
+                    style={{
+                        overflowY: "auto",
+                        maxHeight: "calc(100vh - 200px)",
+                    }}
+                >
+                    {messages.map((message) => (
+                        <ListItem key={message._id}>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <ListItemText
+                                        align={
+                                            message.receiver === selectedChat
+                                                ? "right"
+                                                : "left"
+                                        }
+                                        primary={message.content}
+                                    />
                                 </Grid>
-                            </ListItem>
-                        );
-                    })}
+                                <Grid item xs={12}>
+                                    <ListItemText
+                                        align={
+                                            message.receiver === selectedChat
+                                                ? "right"
+                                                : "left"
+                                        }
+                                        secondary={message.date}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </ListItem>
+                    ))}
                 </List>
             )}
 
-            <Grid
-                container
-                spacing={2}
-                alignItems="center"
-                justifyContent="center"
-                sx={{ display: "flex" }}
-            >
-                <Grid item xs={8} sx={{ paddingBottom: 2 }}>
-                    <TextField
-                        id="outlined-basic"
-                        label="Type Something"
-                        fullWidth
-                        value={message}
-                        onChange={handleChange}
-                    />
+            {messages && (
+                <Grid
+                    container
+                    spacing={2}
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{
+                        position: "sticky",
+                        bottom: 0,
+                        zIndex: 1,
+                        backgroundColor: "white",
+                        paddingBottom: 2,
+                    }}
+                >
+                    <Grid item xs={8}>
+                        <TextField
+                            id="outlined-basic"
+                            label="Type Something"
+                            fullWidth
+                            value={message}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                    <Divider orientation="horizontal" flexItem />
+                    <Grid item>
+                        <Button variant="contained" onClick={handleSubmit}>
+                            Send
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <Button variant="contained" onClick={handleSubmit}>
-                        Send
-                    </Button>
-                </Grid>
-            </Grid>
+            )}
         </>
     );
 };

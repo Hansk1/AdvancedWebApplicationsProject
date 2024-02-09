@@ -6,7 +6,7 @@ let messageSchema = new Schema({
     sender: { type: String },
     receiver: { type: String },
     content: { type: String },
-    date: { type: Date, default: new Date() },
+    date: { type: Date },
 });
 
 module.exports = mongoose.model("messages", messageSchema);

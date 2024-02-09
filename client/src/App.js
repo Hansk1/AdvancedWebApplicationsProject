@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
-//Import pag components:
+//Import page components:
 import SignIn from "./components/login";
 import Register from "./components/register";
 import SwipePage from "./components/swipePage";
