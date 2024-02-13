@@ -79,7 +79,13 @@ const ChatWindow = ({ jwt, selectedChat }) => {
     };
 
     return (
-        <>
+        <Box
+            sx={{
+                position: "relative",
+                height: "100%",
+                overflow: "hidden",
+            }}
+        >
             {!messages && (
                 <Box
                     sx={{
@@ -96,7 +102,7 @@ const ChatWindow = ({ jwt, selectedChat }) => {
                 <List
                     style={{
                         overflowY: "auto",
-                        maxHeight: "calc(100vh - 200px)",
+                        maxHeight: "80%",
                     }}
                 >
                     {messages.map((message) => (
@@ -135,11 +141,12 @@ const ChatWindow = ({ jwt, selectedChat }) => {
                     alignItems="center"
                     justifyContent="center"
                     sx={{
-                        position: "sticky",
+                        position: "absolute",
                         bottom: 0,
-                        zIndex: 1,
+                        width: "100%",
                         backgroundColor: "white",
-                        paddingBottom: 2,
+                        padding: 0,
+                        paddingBottom: 1,
                     }}
                 >
                     <Grid item xs={8}>
@@ -159,7 +166,7 @@ const ChatWindow = ({ jwt, selectedChat }) => {
                     </Grid>
                 </Grid>
             )}
-        </>
+        </Box>
     );
 };
 

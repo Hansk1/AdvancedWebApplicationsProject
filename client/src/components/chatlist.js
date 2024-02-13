@@ -32,6 +32,7 @@ const ChatList = ({ jwt, setSelectedChat }) => {
             setChats(responseData.foundUser.chats);
         }
     };
+
     const usersFetch = async () => {
         if (chats) {
             const updatedUsers = await Promise.all(
