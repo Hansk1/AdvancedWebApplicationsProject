@@ -34,26 +34,6 @@ export default function TopBar() {
                 <nav>
                     <Link
                         component={routerLink}
-                        to="/register"
-                        variant="button"
-                        color="text.primary"
-                        href="#"
-                        sx={{ my: 1, mx: 1.5 }}
-                    >
-                        Register
-                    </Link>
-                    <Link
-                        component={routerLink}
-                        to="/Login"
-                        variant="button"
-                        color="text.primary"
-                        href="#"
-                        sx={{ my: 1, mx: 1.5 }}
-                    >
-                        Login
-                    </Link>
-                    <Link
-                        component={routerLink}
                         to="/"
                         variant="button"
                         color="text.primary"

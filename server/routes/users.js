@@ -191,8 +191,7 @@ router.post(
 
             //If both users have liked each other, add their IDs to the chats list for both users
             const likedUser = await User.findById(req.body.likedUserId);
-            console.log(req.user._id.toString());
-            console.log(likedUser._id.toString());
+
             if (likedUser.outgoingLikes.includes(req.user._id.toString())) {
                 console.log("KISSA");
                 await User.updateOne(

@@ -38,8 +38,16 @@ export default function SwipeBox({ jwt, user }) {
     };
 
     const addToLiked = async (event) => {
+        let userId = null;
+        if (event) {
+            userId = event.target.value;
+        } else {
+            console.log("kissa");
+            userId = foundUser._id;
+        }
+
         const data = {
-            likedUserId: event.target.value,
+            likedUserId: userId,
         };
         const response = await fetch("/users/addlike", {
             method: "POST",
@@ -57,6 +65,26 @@ export default function SwipeBox({ jwt, user }) {
         dataFetch();
     };
 
+    //Handle the swiping:
+    let xStart = 0;
+
+    const handleTouchStart = (event) => {
+        xStart = event.touches[0].clientX;
+    };
+
+    const handleTouchEnd = (event) => {
+        if (event.changedTouches && event.changedTouches.length > 0) {
+            const xEnd = event.changedTouches[0].clientX;
+            const deltaX = xEnd - xStart;
+
+            if (deltaX > 50) {
+                dataFetch(); // Swipe right
+            } else if (deltaX < -50) {
+                addToLiked(); // Swipe left
+            }
+        }
+    };
+
     return (
         <Container
             component="main"
@@ -66,10 +94,15 @@ export default function SwipeBox({ jwt, user }) {
                 flexDirection: "column",
                 gap: 2,
             }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
         >
             <CssBaseline />
             {foundUser && ( // Conditionally render if foundUser is not null
-                <Paper elevation={3} sx={{ mx: 8, mt: 8 }}>
+                <Paper
+                    elevation={3}
+                    sx={{ mx: { xs: 2, md: 8 }, mt: { xs: 6, md: 8 } }}
+                >
                     <Box
                         sx={{
                             py: 2,
@@ -98,7 +131,7 @@ export default function SwipeBox({ jwt, user }) {
                     </Button>
                 </Paper>
             )}
-            {foundUser && ( // Conditionally render if foundUser is not null
+            {foundUser && (
                 <Box
                     sx={{
                         display: "flex",
@@ -109,7 +142,10 @@ export default function SwipeBox({ jwt, user }) {
                 >
                     <Button
                         variant="contained"
-                        sx={{ width: "10%" }}
+                        sx={{
+                            width: "10%",
+                            display: { xs: "none", md: "block" },
+                        }}
                         onClick={addToLiked}
                         value={foundUser._id}
                     >
@@ -117,11 +153,21 @@ export default function SwipeBox({ jwt, user }) {
                     </Button>
                     <Button
                         variant="contained"
-                        sx={{ width: "10%" }}
+                        sx={{
+                            width: "10%",
+                            display: { xs: "none", md: "block" },
+                        }}
                         onClick={dataFetch}
                     >
                         Nope
                     </Button>
+                    <Typography
+                        sx={{
+                            display: { xs: "block", md: "none" },
+                        }}
+                    >
+                        Swipe left to like and swipe right to dislike
+                    </Typography>
                 </Box>
             )}
         </Container>

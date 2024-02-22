@@ -65,7 +65,9 @@ const ChatList = ({ jwt, setSelectedChat }) => {
                         key={user._id}
                         onClick={() => handleUserSelect(user._id)}
                     >
-                        <ListItemIcon>
+                        <ListItemIcon
+                            sx={{ display: { xs: "none", md: "inline" } }}
+                        >
                             <Avatar
                                 alt={user.firstName + " " + user.lastName}
                                 src={user.profilePicture}
