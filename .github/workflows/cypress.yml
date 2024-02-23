@@ -13,12 +13,12 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
-        - name: Set up MongoDB and run tests
-        run: |
-          chmod +x setupTest.sh
-          ./setupTest.sh
-        env:
-          MONGODB_URI: mongodb://127.0.0.1:27017/projectdb
+            - name: Set up MongoDB and run tests
+                run: |
+                    chmod +x setupTest.sh
+                    ./setupTest.sh
+                env:
+                    MONGODB_URI: mongodb://127.0.0.1:27017/projectdb
             - name: Cypress run
               # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
               uses: cypress-io/github-action@v6
