@@ -47,3 +47,4 @@ npm run dev
 | Swiping          | 2      |
 | Profile Pictures | 3      |
 | Timestamps       | 3      |
+| Unit testing     | 5      |
