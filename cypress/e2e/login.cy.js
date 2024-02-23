@@ -17,8 +17,8 @@ describe("User registeration API", () => {
                 email: userData.email,
                 password: userData.password,
             }).then((loginResponse) => {
-                expect(response.status).to.equal(200);
-                expect(response.body).to.have.property("succes", true);
+                expect(loginResponse.status).to.equal(200);
+                expect(loginResponse.body).to.have.property("succes", true);
             });
         });
     });
