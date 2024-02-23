@@ -48,7 +48,7 @@ describe("User login API", () => {
                 failOnStatusCode: false,
             }).then((loginResponse) => {
                 expect(loginResponse.status).to.equal(403);
-                expect(response.body).to.have.property(
+                expect(loginResponse.body).to.have.property(
                     "message",
                     "Invalid credentials (Password)"
                 );
@@ -59,10 +59,10 @@ describe("User login API", () => {
     it("Login invalid credentials (email)", () => {
         //Register the user:
         const userData = {
-            firstName: "LoginTestUser2",
-            lastName: "LoginTestUser2",
-            email: "LoginTestUser2@example.com",
-            password: "LoginTestUser2222.",
+            firstName: "LoginTestUser3",
+            lastName: "LoginTestUser3",
+            email: "LoginTestUser3@example.com",
+            password: "LoginTestUser3333.",
         };
         cy.request(
             "POST",
@@ -81,7 +81,7 @@ describe("User login API", () => {
                 failOnStatusCode: false,
             }).then((loginResponse) => {
                 expect(loginResponse.status).to.equal(403);
-                expect(response.body).to.have.property(
+                expect(loginResponse.body).to.have.property(
                     "message",
                     "Invalid credentials (Email)"
                 );
