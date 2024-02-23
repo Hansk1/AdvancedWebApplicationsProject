@@ -10,6 +10,7 @@ This web application is a basic replica of the well-known dating platform Tinder
 -   [Responsiveness](#Responsiveness)
 -   [Technologies](#Technologies)
 -   [Features](#Features)
+-   [Bugs](#Bugs)
 
 ## Installation
 
@@ -22,6 +23,12 @@ Make sure you have the following installed on your local machine:
 -   Node.js (including npm)
 -   MongoDB server (Running)
 -   npx and nodemon
+
+Notes:
+
+-   The client runs on port 3000
+-   The server runs on port 5000
+-   To run the tests use (npx cypress run)
 
 ### Clone the Repository
 
@@ -65,3 +72,7 @@ The responsiveness of the application has been tested on a 430px screen.
 | Timestamps               | 3      |
 | Unit testing (Automated) | 5      |
 | Total                    | 43     |
+
+### Bugs
+
+-   When adding a profile picture, the user needs to press the button two times
