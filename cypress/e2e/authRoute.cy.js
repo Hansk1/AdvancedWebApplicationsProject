@@ -8,6 +8,21 @@ describe("Auth routes", () => {
             password: "AuthTestUser1111.",
         };
 
+        const userData2 = {
+            firstName: "AuthTestUser2",
+            lastName: "AuthTestUser2",
+            email: "AuthTestUser2@example.com",
+            password: "AuthTestUser2222.",
+        };
+
+        cy.request(
+            "POST",
+            "http://localhost:5000/users/register",
+            userData2
+        ).then((response) => {
+            expect(response.status).to.equal(200);
+        });
+
         //Register
         cy.request(
             "POST",
