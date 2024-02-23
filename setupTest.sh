@@ -4,7 +4,4 @@
 docker-compose up -d
 
 # Wait for MongoDB to be ready
-sleep 20
-
-# Stop MongoDB service
-docker-compose down
+sleep 10
