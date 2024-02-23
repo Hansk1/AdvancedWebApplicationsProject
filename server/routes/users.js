@@ -50,12 +50,16 @@ router.post("/login", body("email").isEmail(), async (req, res, next) => {
         // Find user by email
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
-            return res.status(403).json({ message: "Invalid credentials" });
+            return res
+                .status(403)
+                .json({ message: "Invalid credentials (Email)" });
         }
         // Compare passwords
         const isMatch = await bcrypt.compare(req.body.password, user.password);
         if (!isMatch) {
-            return res.status(403).json({ message: "Invalid credentials" });
+            return res
+                .status(403)
+                .json({ message: "Invalid credentials (Password)" });
         }
         // Generate JWT token
         const token = jwt.sign(
