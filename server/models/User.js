@@ -11,6 +11,7 @@ let userSchema = new Schema({
         type: String,
         default: "User has not provided any information.",
     },
+    profilePicture: { type: String, default: null },
     password: { type: String },
     outgoingLikes: { type: Array },
     incomingLikes: { type: Array },

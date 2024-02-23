@@ -10,11 +10,15 @@ import { useState, useEffect } from "react";
 const ChatList = ({ jwt, setSelectedChat }) => {
     const [chats, setChats] = useState(null);
     const [users, setUsers] = useState([]);
+    const [userAvatars, setUserAvatars] = useState({});
+
     useEffect(() => {
+        setUserAvatars({});
         chatsFetch();
     }, []);
 
     useEffect(() => {
+        setUserAvatars({});
         usersFetch();
     }, [chats]);
 
@@ -49,11 +53,46 @@ const ChatList = ({ jwt, setSelectedChat }) => {
                 })
             );
             setUsers(updatedUsers);
+            fetchAvatars(updatedUsers);
+        }
+    };
+
+    const fetchAvatars = async (users) => {
+        const avatarMap = {};
+        for (const user of users) {
+            if (user.profilePicture) {
+                const avatar = await fetchPicture(user.profilePicture);
+                avatarMap[user._id] = avatar;
+                setUserAvatars(avatarMap);
+            }
         }
     };
 
     const handleUserSelect = (userId) => {
         setSelectedChat(userId);
+    };
+
+    const fetchPicture = async (pictureId) => {
+        const response = await fetch("/pictures/" + pictureId, {
+            method: "GET",
+            headers: {
+                Authorization: "bearer " + jwt,
+            },
+            mode: "cors",
+        });
+
+        const responseData = await response.json();
+        const imgBuffer = responseData.imgbuffer;
+
+        const blob = new Blob([new Uint8Array(imgBuffer.data)]);
+        const reader = new FileReader();
+        return new Promise((resolve) => {
+            reader.onloadend = () => {
+                const base64 = reader.result.split(",")[1];
+                resolve(`data:image/png;base64,` + base64);
+            };
+            reader.readAsDataURL(blob);
+        });
     };
 
     return (
@@ -70,7 +109,7 @@ const ChatList = ({ jwt, setSelectedChat }) => {
                         >
                             <Avatar
                                 alt={user.firstName + " " + user.lastName}
-                                src={user.profilePicture}
+                                src={userAvatars[user._id]}
                             />
                         </ListItemIcon>
                         <ListItemText

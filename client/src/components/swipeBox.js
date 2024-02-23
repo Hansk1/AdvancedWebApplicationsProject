@@ -17,12 +17,14 @@ import { useEffect, useState, useRef } from "react";
 
 export default function SwipeBox({ jwt, user }) {
     const [foundUser, setFoundUser] = useState(null);
+    const [profilePicture, setProfilePicture] = useState(null);
+
     useEffect(() => {
         dataFetch();
     }, []);
 
     const dataFetch = async () => {
-        const response = await fetch("/users/random", {
+        let response = await fetch("/users/random", {
             method: "GET",
             headers: {
                 Authorization: "bearer " + jwt,
@@ -30,10 +32,35 @@ export default function SwipeBox({ jwt, user }) {
             mode: "cors",
         });
 
-        const responseData = await response.json();
+        let responseData = await response.json();
 
         if (responseData.foundUser) {
             setFoundUser(responseData.foundUser);
+        }
+
+        if (responseData.foundUser.profilePicture) {
+            response = await fetch(
+                "/pictures/" + responseData.foundUser.profilePicture,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: "bearer " + jwt,
+                    },
+                    mode: "cors",
+                }
+            );
+            responseData = await response.json();
+            const imgBuffer = responseData.imgbuffer;
+
+            const blob = new Blob([new Uint8Array(imgBuffer.data)]);
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => {
+                const base64 = reader.result.split(",")[1];
+                setProfilePicture(`data:image/png;base64,` + base64);
+            };
+        } else {
+            setProfilePicture(null);
         }
     };
 
@@ -113,9 +140,10 @@ export default function SwipeBox({ jwt, user }) {
                             gap: 2,
                         }}
                     >
-                        <Avatar src="" sx={{ height: "60px", width: "60px" }}>
-                            JP
-                        </Avatar>
+                        <Avatar
+                            src={profilePicture}
+                            sx={{ height: "60px", width: "60px" }}
+                        ></Avatar>
                         <Typography variant="h4">
                             {foundUser.firstName}
                         </Typography>

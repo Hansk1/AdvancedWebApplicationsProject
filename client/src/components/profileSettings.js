@@ -5,8 +5,23 @@ import {
     Container,
     TextField,
     InputLabel,
+    styled,
 } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState, useEffect } from "react";
+
+//Style for the file upload button:
+const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+});
 
 export default function ProfileSettings({ user, jwt }) {
     const [foundUser, setFoundUser] = useState(null);
@@ -42,6 +57,24 @@ export default function ProfileSettings({ user, jwt }) {
     // Function to handle form submission
     async function handleSubmit(event) {
         event.preventDefault();
+
+        //Upload the profile picture:
+        if (userData.profilePicture) {
+            const formData = new FormData();
+            formData.append("profilePicture", userData.profilePicture);
+
+            const picturePostResponsePromise = await fetch("/pictures/add", {
+                method: "POST",
+                body: formData,
+                mode: "cors",
+            });
+            const responseData = await picturePostResponsePromise.json();
+            setUserData({
+                ...userData,
+                profilePictureId: responseData.pictureId,
+            });
+        }
+
         // Send a POST request to update user data
         const dataPromise = await fetch("/users/update-user", {
             method: "POST",
@@ -63,8 +96,13 @@ export default function ProfileSettings({ user, jwt }) {
 
     // Function to handle input field changes
     const handleChange = (e) => {
-        // Update the userData state with the new input value
-        setUserData({ ...userData, [e.target.name]: e.target.value });
+        if (e.target.type === "file") {
+            // Update the userData state with the new input value
+            setUserData({ ...userData, profilePicture: e.target.files[0] });
+        } else {
+            // Update the userData state with the new input value
+            setUserData({ ...userData, [e.target.name]: e.target.value });
+        }
     };
 
     return (
@@ -159,6 +197,18 @@ export default function ProfileSettings({ user, jwt }) {
                                 defaultValue={foundUser.profileText}
                             />
                         </Grid>
+                        <Button
+                            component="label"
+                            role={undefined}
+                            variant="contained"
+                            tabIndex={-1}
+                            startIcon={<CloudUploadIcon />}
+                            sx={{ marginLeft: 2, mt: 3, mb: 2 }}
+                            required
+                        >
+                            Profile Picture
+                            <VisuallyHiddenInput type="file" />
+                        </Button>
                         <Button
                             type="submit"
                             variant="contained"

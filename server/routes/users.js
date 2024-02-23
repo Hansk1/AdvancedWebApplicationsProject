@@ -4,9 +4,6 @@ const passport = require("../auth/validateToken");
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 var router = express.Router();
 
 // Register a new user
@@ -97,6 +94,8 @@ router.post(
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
         try {
+            console.log(req.body);
+
             // Check if email is already in use
             const foundUser = await User.findOne({ email: req.body.email });
             if (foundUser) {
@@ -111,6 +110,7 @@ router.post(
                         lastName: req.body.lastname,
                         email: req.body.email,
                         profileText: req.body.profileText,
+                        profilePicture: req.body.profilePictureId,
                     },
                 }
             );
