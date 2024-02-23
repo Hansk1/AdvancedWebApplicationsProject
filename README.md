@@ -6,8 +6,9 @@ This web application is a basic replica of the well-known dating platform Tinder
 
 ## Table of Contents
 
--   [Installation](#installation)
--   [Usage](#usage)
+-   [Installation](#Installation)
+-   [Usage](#Usage)
+-   [Technologies](#Technologies)
 -   [Features](#Features)
 
 ## Installation
@@ -24,13 +25,14 @@ Make sure you have the following installed on your local machine:
 
 ```bash
 git clone https://github.com/Hansk1/AdvancedWebApplicationsProject
+cd <project root folder>
 ```
-
-cd to the root folder of the project
 
 ### Instal required node modules
 
-placeholdertextplaceholdertextplaceholdertextplaceholdertext
+```bash
+npm run install-modules
+```
 
 ### Run the app
 
@@ -38,13 +40,22 @@ placeholdertextplaceholdertextplaceholdertextplaceholdertext
 npm run dev
 ```
 
+### Technologies
+
+-   MongoDB
+-   Express
+-   React (Material UI)
+-   NodeJS
+-   Cypress
+
 ### Features
 
-| Feature          | Points |
-| ---------------- | ------ |
-| Basic features   | 25     |
-| React            | 5      |
-| Swiping          | 2      |
-| Profile Pictures | 3      |
-| Timestamps       | 3      |
-| Unit testing     | 5      |
+| Feature                  | Points |
+| ------------------------ | ------ |
+| Basic features           | 25     |
+| React                    | 5      |
+| Swiping                  | 2      |
+| Profile Pictures         | 3      |
+| Timestamps               | 3      |
+| Unit testing (Automated) | 5      |
+| Total                    | 43     |
