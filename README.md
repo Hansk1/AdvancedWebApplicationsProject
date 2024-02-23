@@ -34,5 +34,5 @@ placeholdertextplaceholdertextplaceholdertextplaceholdertext
 ### Run the app
 
 ```bash
-    npm run dev
+npm run dev
 ```
