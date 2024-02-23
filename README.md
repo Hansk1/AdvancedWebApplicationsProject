@@ -7,7 +7,7 @@ This web application is a basic replica of the well-known dating platform Tinder
 ## Table of Contents
 
 -   [Installation](#Installation)
--   [Usage](#Usage)
+-   [Responsiveness](#Responsiveness)
 -   [Technologies](#Technologies)
 -   [Features](#Features)
 
@@ -20,6 +20,8 @@ To run this application locally, follow these steps:
 Make sure you have the following installed on your local machine:
 
 -   Node.js (including npm)
+-   MongoDB server (Running)
+-   npx and nodemon
 
 ### Clone the Repository
 
@@ -39,6 +41,10 @@ npm run install-modules
 ```bash
 npm run dev
 ```
+
+### Responsiveness
+
+The responsiveness of the application has been tested on a 430px screen.
 
 ### Technologies
 

@@ -69,7 +69,6 @@ export default function SwipeBox({ jwt, user }) {
         if (event) {
             userId = event.target.value;
         } else {
-            console.log("kissa");
             userId = foundUser._id;
         }
 

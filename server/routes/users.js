@@ -136,6 +136,7 @@ router.get(
     (req, res) => {
         User.aggregate(
             [
+                //Check that the found user isn't the logged user:
                 { $match: { _id: { $ne: req.user._id } } },
                 { $sample: { size: 1 } },
             ],

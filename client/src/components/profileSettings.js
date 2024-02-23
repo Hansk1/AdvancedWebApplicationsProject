@@ -66,6 +66,9 @@ export default function ProfileSettings({ user, jwt }) {
             const picturePostResponsePromise = await fetch("/pictures/add", {
                 method: "POST",
                 body: formData,
+                headers: {
+                    Authorization: "bearer " + jwt,
+                },
                 mode: "cors",
             });
             const responseData = await picturePostResponsePromise.json();
