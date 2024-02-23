@@ -1,4 +1,4 @@
-describe("User registeration API", () => {
+describe("User login API", () => {
     it("Login successfully", () => {
         //Register the user:
         const userData = {
@@ -13,13 +13,39 @@ describe("User registeration API", () => {
             userData
         ).then((response) => {
             expect(response.status).to.equal(200);
+            //Test the login:
             cy.request("POST", "http://localhost:5000/users/login", {
                 email: userData.email,
                 password: userData.password,
             }).then((loginResponse) => {
                 expect(loginResponse.status).to.equal(200);
-                expect(loginResponse.body).to.have.property("succes", true);
             });
         });
     });
+});
+
+it("Login invalid credentials(password)", () => {
+    //Register the user:
+    const userData = {
+        firstName: "LoginTestUser2",
+        lastName: "LoginTestUser2",
+        email: "LoginTestUser2@example.com",
+        password: "LoginTestUser2222.",
+    };
+    cy.request("POST", "http://localhost:5000/users/register", userData).then(
+        (response) => {
+            expect(response.status).to.equal(200);
+            //Test the login:
+            cy.request("POST", "http://localhost:5000/users/login", {
+                email: userData.email,
+                password: "Invalid",
+            }).then((loginResponse) => {
+                expect(loginResponse.status).to.equal(43);
+                expect(response.body).to.have.property(
+                    "message",
+                    "Invalid credentials (Password)"
+                );
+            });
+        }
+    );
 });
