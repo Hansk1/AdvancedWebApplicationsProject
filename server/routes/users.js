@@ -147,7 +147,10 @@ router.get(
                         .json({ message: "Failed to get random user" });
                 }
                 if (userObject) {
-                    return res.json({ foundUser: userObject[0] });
+                    return res.json({
+                        message: "success",
+                        foundUser: userObject[0],
+                    });
                 } else {
                     return res.json({ message: "No random user found" });
                 }
