@@ -8,6 +8,7 @@ This web application is a basic replica of the well-known dating platform Tinder
 
 -   [Installation](#installation)
 -   [Usage](#usage)
+-   [Features](#Features)
 
 ## Installation
 
@@ -36,3 +37,12 @@ placeholdertextplaceholdertextplaceholdertextplaceholdertext
 ```bash
 npm run dev
 ```
+
+### Features
+
+| Feature          | Points |
+| ---------------- | ------ |
+| Basic features   | 25     |
+| Swiping          | 2      |
+| Profile Pictures | 3      |
+| Timestamps       | 3      |

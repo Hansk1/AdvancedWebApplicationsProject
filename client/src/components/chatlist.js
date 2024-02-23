@@ -18,7 +18,6 @@ const ChatList = ({ jwt, setSelectedChat }) => {
     }, []);
 
     useEffect(() => {
-        setUserAvatars({});
         usersFetch();
     }, [chats]);
 
@@ -59,13 +58,19 @@ const ChatList = ({ jwt, setSelectedChat }) => {
 
     const fetchAvatars = async (users) => {
         const avatarMap = {};
-        for (const user of users) {
+        // Create an array of promises for fetching avatars
+        const avatarPromises = users.map(async (user) => {
             if (user.profilePicture) {
                 const avatar = await fetchPicture(user.profilePicture);
                 avatarMap[user._id] = avatar;
-                setUserAvatars(avatarMap);
             }
-        }
+        });
+
+        // Wait for all promises to resolve
+        await Promise.all(avatarPromises);
+
+        // Set the state with the collected avatars
+        setUserAvatars(avatarMap);
     };
 
     const handleUserSelect = (userId) => {

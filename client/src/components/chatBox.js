@@ -23,7 +23,6 @@ import { useState, useEffect } from "react";
 
 export default function ChatBox({ jwt }) {
     const [selectedChat, setSelectedChat] = useState(null);
-    console.log(selectedChat);
     return (
         <Container maxWidth="md" sx={{ mt: 8 }}>
             <Grid
