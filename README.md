@@ -43,6 +43,7 @@ npm run dev
 | Feature          | Points |
 | ---------------- | ------ |
 | Basic features   | 25     |
+| React            | 5      |
 | Swiping          | 2      |
 | Profile Pictures | 3      |
 | Timestamps       | 3      |
