@@ -38,9 +38,14 @@ describe("User login API", () => {
         ).then((response) => {
             expect(response.status).to.equal(200);
             //Test the login:
-            cy.request("POST", "http://localhost:5000/users/login", {
-                email: userData.email,
-                password: "Invalid1234.",
+            cy.request({
+                method: "POST",
+                url: "http://localhost:5000/users/login",
+                body: {
+                    email: userData.email,
+                    password: "Invalid1234.",
+                },
+                failOnStatusCode: false,
             }).then((loginResponse) => {
                 expect(loginResponse.status).to.equal(403);
                 expect(response.body).to.have.property(
@@ -66,9 +71,14 @@ describe("User login API", () => {
         ).then((response) => {
             expect(response.status).to.equal(200);
             //Test the login:
-            cy.request("POST", "http://localhost:5000/users/login", {
-                email: "invalid@example.com",
-                password: userData.password,
+            cy.request({
+                method: "POST",
+                url: "http://localhost:5000/users/login",
+                body: {
+                    email: "invalid@example.com",
+                    password: userData.password,
+                },
+                failOnStatusCode: false,
             }).then((loginResponse) => {
                 expect(loginResponse.status).to.equal(403);
                 expect(response.body).to.have.property(
