@@ -15,15 +15,19 @@ const ChatList = ({ setSelectedChat }) => {
     const [users, setUsers] = useState([]);
     const [userAvatars, setUserAvatars] = useState({});
 
+    //Effect to fetch data on component mount:
     useEffect(() => {
+        // Reset user avatars and fetch chats
         setUserAvatars({});
         chatsFetch();
     }, []);
 
+    //Effect to fetcg data when chats state changes:
     useEffect(() => {
         usersFetch();
     }, [chats]);
 
+    //Function to fetch chat data
     const chatsFetch = async () => {
         const response = await fetch("/users/userdata", {
             method: "GET",
@@ -36,6 +40,7 @@ const ChatList = ({ setSelectedChat }) => {
         }
     };
 
+    // Function to fetch user data for each chat
     const usersFetch = async () => {
         if (chats) {
             const updatedUsers = await Promise.all(
@@ -48,11 +53,14 @@ const ChatList = ({ setSelectedChat }) => {
                     return userData.foundUser;
                 })
             );
+            //Set users state with feched data
             setUsers(updatedUsers);
+            //Fetch user pictures
             fetchAvatars(updatedUsers);
         }
     };
 
+    // Function to fetch avatars for users
     const fetchAvatars = async (users) => {
         const avatarMap = {};
         // Create an array of promises for fetching avatars
@@ -70,10 +78,12 @@ const ChatList = ({ setSelectedChat }) => {
         setUserAvatars(avatarMap);
     };
 
+    // Function to handle user selection
     const handleUserSelect = (userId) => {
         setSelectedChat(userId);
     };
 
+    // Function to fetch a user's profile picture from the server:
     const fetchPicture = async (pictureId) => {
         const response = await fetch("/pictures/" + pictureId, {
             method: "GET",

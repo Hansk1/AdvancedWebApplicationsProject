@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import Cookies from "js-cookie";
 import {
     Container,
     Box,
@@ -14,19 +13,17 @@ export default function SwipeBox() {
     const [foundUser, setFoundUser] = useState(null);
     const [profilePicture, setProfilePicture] = useState(null);
 
-    // Retrieve user data from the cookie
-    const userDataCookie = Cookies.get("user");
-
-    const user = userDataCookie ? JSON.parse(userDataCookie) : null;
-
+    //Effect to fetch data on component mount
     useEffect(() => {
         dataFetch();
     }, []);
 
+    //Effect to fetch the profile picture when foundUser state changes
     useEffect(() => {
         fetchPicture();
     }, [foundUser]);
 
+    //Function for fetching random user data
     const dataFetch = async () => {
         let response = await fetch("/users/random", {
             method: "GET",
@@ -40,6 +37,7 @@ export default function SwipeBox() {
         }
     };
 
+    //Function to fetch found user profile picture
     const fetchPicture = async () => {
         if (foundUser && foundUser.profilePicture) {
             const response = await fetch(
@@ -50,20 +48,24 @@ export default function SwipeBox() {
                 }
             );
             const responseData = await response.json();
-            const imgBuffer = responseData.imgbuffer;
 
+            //Load the image:
+            const imgBuffer = responseData.imgbuffer;
             const blob = new Blob([new Uint8Array(imgBuffer.data)]);
             const reader = new FileReader();
             reader.readAsDataURL(blob);
             reader.onloadend = () => {
+                // Update the profilePicture state with the base64 data
                 const base64 = reader.result.split(",")[1];
                 setProfilePicture(`data:image/png;base64,` + base64);
             };
         } else {
+            //Reset the profilePicture state if no user or no profile picture
             setProfilePicture(null);
         }
     };
 
+    //Function that adds the likes when called:
     const addToLiked = async (event) => {
         let userId = null;
         if (event) {
@@ -72,6 +74,7 @@ export default function SwipeBox() {
             userId = foundUser._id;
         }
 
+        //Prepare data and send the request
         const data = {
             likedUserId: userId,
         };
@@ -84,7 +87,7 @@ export default function SwipeBox() {
             mode: "cors",
         });
 
-        const responseData = await response.json();
+        //const responseData = await response.json();
 
         dataFetch();
     };
@@ -102,9 +105,11 @@ export default function SwipeBox() {
             const deltaX = xEnd - xStart;
 
             if (deltaX > 50) {
-                dataFetch(); // Swipe right
+                // Swipe right
+                dataFetch();
             } else if (deltaX < -50) {
-                addToLiked(); // Swipe left
+                // Swipe left
+                addToLiked();
             }
         }
     };
@@ -148,12 +153,9 @@ export default function SwipeBox() {
                             {foundUser.lastName}
                         </Typography>
                     </Box>
-                    <Typography sx={{ mx: 2 }}>
+                    <Typography sx={{ mx: 2, marginBottom: 2 }}>
                         {foundUser.profileText}
                     </Typography>
-                    <Button variant="outlined" sx={{ my: 2 }}>
-                        Pictures
-                    </Button>
                 </Paper>
             )}
             {foundUser && (

@@ -35,8 +35,11 @@ export default function Register() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
 
+    //Function to handle form submission
     const submit = (event) => {
         event.preventDefault();
+
+        //Send a POST request to the server with user data
         fetch("/users/register", {
             method: "POST",
             headers: {
@@ -53,6 +56,7 @@ export default function Register() {
             });
     };
 
+    //Function to handle input field changes
     const handleChange = (e) => {
         setUserData({ ...userData, [e.target.name]: e.target.value });
     };

@@ -1,5 +1,4 @@
 import React from "react";
-import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import {
     Button,
@@ -17,14 +16,16 @@ const ChatWindow = ({ selectedChat }) => {
     const [messages, setMessages] = useState(null);
     const [message, setMessage] = useState("");
 
+    // Effect to fetch messages when selected chat changes (uses simple polling system)
     useEffect(() => {
         if (selectedChat) {
             messagesFetch();
-            const intervalId = setInterval(messagesFetch, 2500);
+            const intervalId = setInterval(messagesFetch, 2000);
             return () => clearInterval(intervalId);
         }
     }, [selectedChat]);
 
+    // Function to fetch messages for the selected chat
     const messagesFetch = async () => {
         const response = await fetch(`/messages/get-messages/${selectedChat}`, {
             method: "GET",
@@ -44,6 +45,13 @@ const ChatWindow = ({ selectedChat }) => {
             content: message,
         };
         event.preventDefault();
+
+        // Check if the message is empty
+        if (!message.trim()) {
+            // If message is empty, return early
+            return;
+        }
+
         // Send a POST request to update user data
         const dataPromise = await fetch("/messages/add", {
             method: "POST",
@@ -56,7 +64,10 @@ const ChatWindow = ({ selectedChat }) => {
 
         // Parse the response as JSON
         const responseData = await dataPromise.json();
-        if (responseData.success) messagesFetch();
+        if (responseData.success) {
+            messagesFetch();
+            setMessage("");
+        }
     }
 
     // Function to handle input field changes
@@ -143,6 +154,7 @@ const ChatWindow = ({ selectedChat }) => {
                             fullWidth
                             value={message}
                             onChange={handleChange}
+                            required
                         />
                     </Grid>
                     <Divider orientation="horizontal" flexItem />

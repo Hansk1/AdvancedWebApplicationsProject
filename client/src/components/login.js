@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
 import { Link as routerLink } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -38,11 +37,11 @@ function Copyright(props) {
 }
 
 export default function SignIn() {
-    const navigate = useNavigate();
     const [userData, setUserData] = useState({});
 
     const submit = (event) => {
         event.preventDefault();
+        //Fetch the userdata:
         fetch("/users/login", {
             method: "POST",
             headers: {
@@ -54,12 +53,13 @@ export default function SignIn() {
             .then((response) => response.json())
             .then(async (data) => {
                 if (data.token) {
-                    //Save the jwt token in browser cookies
+                    //Save the jwt token in HTTP cookies
                     Cookies.set("token", data.token, {
                         expires: 1,
                         secure: true,
                     });
 
+                    //Save the user data in HTTP cookies
                     const user = await JSON.parse(
                         Buffer.from(
                             data.token.split(".")[1],
