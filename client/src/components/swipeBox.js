@@ -9,6 +9,9 @@ import {
     Paper,
 } from "@mui/material";
 
+import Link from "@mui/material/Link";
+import { Link as routerLink } from "react-router-dom";
+
 export default function SwipeBox() {
     const [foundUser, setFoundUser] = useState(null);
     const [profilePicture, setProfilePicture] = useState(null);
@@ -146,12 +149,26 @@ export default function SwipeBox() {
                             src={profilePicture}
                             sx={{ height: "60px", width: "60px" }}
                         ></Avatar>
-                        <Typography variant="h4">
-                            {foundUser.firstName}
-                        </Typography>
-                        <Typography variant="h4">
-                            {foundUser.lastName}
-                        </Typography>
+                        <Link
+                            component={routerLink}
+                            to="/profile"
+                            state={{ user: foundUser, picture: profilePicture }}
+                            style={{ textDecoration: "none", color: "black" }}
+                        >
+                            <Typography variant="h4">
+                                {foundUser.firstName}
+                            </Typography>
+                        </Link>
+                        <Link
+                            component={routerLink}
+                            to="/profile"
+                            state={{ user: foundUser, picture: profilePicture }}
+                            style={{ textDecoration: "none", color: "black" }}
+                        >
+                            <Typography variant="h4">
+                                {foundUser.lastName}
+                            </Typography>
+                        </Link>
                     </Box>
                     <Typography sx={{ mx: 2, marginBottom: 2 }}>
                         {foundUser.profileText}

@@ -14,6 +14,7 @@ import Register from "./components/register";
 import SwipePage from "./components/swipePage";
 import ChatPage from "./components/chatPage";
 import ProfileSettingsPage from "./components/profileSettingsPage";
+import ProfilePageTopBar from "./components/profilePageWithTopBar";
 
 function App() {
     // Retrieve user data from the cookie
@@ -88,6 +89,16 @@ function App() {
                             ) : (
                                 <Navigate to="/" />
                             )
+                        }
+                    />
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <ProfilePageTopBar
+                                    setUserData={setUserData}
+                                ></ProfilePageTopBar>
+                            </ProtectedRoute>
                         }
                     />
                 </Routes>

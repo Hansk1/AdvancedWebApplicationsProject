@@ -71,11 +71,14 @@ The responsiveness of the application has been tested on a 430px screen.
 | Profile Pictures                                                | 3      |
 | Timestamps                                                      | 2      |
 | Unit testing (Automated)                                        | 5      |
-| Using hTTP cookies to save userData and JWT token (Own feature) | 2-3    |
+| ProfilePage (Click the username in swiper)                      | 2      |
+| Using HTTP cookies to save userData and JWT token (Own feature) | 2-3    |
 | Polling system for the chat (Own feature)                       | 2      |
-| Total                                                           | 46-47  |
+| Total                                                           | 48-49  |
 
 The use of HTTP cookies was not taught in the course, so I thought I could get a couple of points for using them. With the help of cookies, the user remains logged in to the page even if the page is reloaded.
+
+In the course Discord, it was said that it is enough for the chat to download new messages when the page/chat is updated. This is a clumsy solution, so I developed a simple polling system.
 
 ### Bugs
 
