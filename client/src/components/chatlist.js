@@ -27,9 +27,6 @@ const ChatList = ({ setSelectedChat }) => {
     const chatsFetch = async () => {
         const response = await fetch("/users/userdata", {
             method: "GET",
-            headers: {
-                Authorization: "bearer " + Cookies.get("token"),
-            },
             mode: "cors",
         });
 
@@ -45,9 +42,6 @@ const ChatList = ({ setSelectedChat }) => {
                 chats.map(async (userId) => {
                     const response = await fetch(`/users/${userId}`, {
                         method: "GET",
-                        headers: {
-                            Authorization: "Bearer " + Cookies.get("token"),
-                        },
                         mode: "cors",
                     });
                     const userData = await response.json();
@@ -83,9 +77,6 @@ const ChatList = ({ setSelectedChat }) => {
     const fetchPicture = async (pictureId) => {
         const response = await fetch("/pictures/" + pictureId, {
             method: "GET",
-            headers: {
-                Authorization: "bearer " + Cookies.get("token"),
-            },
             mode: "cors",
         });
 

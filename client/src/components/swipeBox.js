@@ -26,9 +26,6 @@ export default function SwipeBox() {
     const dataFetch = async () => {
         let response = await fetch("/users/random", {
             method: "GET",
-            headers: {
-                Authorization: "bearer " + Cookies.get("token"),
-            },
             mode: "cors",
         });
 
@@ -43,9 +40,6 @@ export default function SwipeBox() {
                 "/pictures/" + responseData.foundUser.profilePicture,
                 {
                     method: "GET",
-                    headers: {
-                        Authorization: "bearer " + Cookies.get("token"),
-                    },
                     mode: "cors",
                 }
             );
@@ -79,7 +73,6 @@ export default function SwipeBox() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "bearer " + Cookies.get("token"),
             },
             body: JSON.stringify(data),
             mode: "cors",

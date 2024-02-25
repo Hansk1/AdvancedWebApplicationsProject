@@ -63,15 +63,18 @@ The responsiveness of the application has been tested on a 430px screen.
 
 ### Features
 
-| Feature                  | Points |
-| ------------------------ | ------ |
-| Basic features           | 25     |
-| React                    | 5      |
-| Swiping                  | 2      |
-| Profile Pictures         | 3      |
-| Timestamps               | 2      |
-| Unit testing (Automated) | 5      |
-| Total                    | 42     |
+| Feature                                           | Points |
+| ------------------------------------------------- | ------ |
+| Basic features                                    | 25     |
+| React                                             | 5      |
+| Swiping                                           | 2      |
+| Profile Pictures                                  | 3      |
+| Timestamps                                        | 2      |
+| Unit testing (Automated)                          | 5      |
+| Using hTTP cookies to save userData and JWT token | 2-3    |
+| Total                                             | 44-45  |
+
+The use of HTTP cookies was not taught in the course, so I thought I could get a couple of points for using them. With the help of cookies, the user remains logged in to the page even if the page is reloaded.
 
 ### Bugs
 

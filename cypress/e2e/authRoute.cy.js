@@ -15,6 +15,7 @@ describe("Auth routes", () => {
             password: "AuthTestUser2222.",
         };
 
+        //Register
         cy.request(
             "POST",
             "http://localhost:5000/users/register",
@@ -37,15 +38,11 @@ describe("Auth routes", () => {
             }).then((loginResponse) => {
                 expect(loginResponse.status).to.equal(200);
 
-                const jwt = loginResponse.body.token;
-
+                cy.setCookie("token", loginResponse.body.token);
                 //Test the route
                 cy.request({
                     method: "GET",
                     url: "http://localhost:5000/users/random",
-                    headers: {
-                        Authorization: "Bearer " + jwt,
-                    },
                 }).then((randomUserResponse) => {
                     expect(randomUserResponse.status).to.equal(200);
                     expect(randomUserResponse.body.message).to.equal("success");

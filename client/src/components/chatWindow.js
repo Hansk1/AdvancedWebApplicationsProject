@@ -28,9 +28,6 @@ const ChatWindow = ({ selectedChat }) => {
     const messagesFetch = async () => {
         const response = await fetch(`/messages/get-messages/${selectedChat}`, {
             method: "GET",
-            headers: {
-                Authorization: "bearer " + Cookies.get("token"),
-            },
             mode: "cors",
         });
 
@@ -54,7 +51,6 @@ const ChatWindow = ({ selectedChat }) => {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
-                Authorization: "bearer " + Cookies.get("token"),
             },
             body: JSON.stringify(data),
             mode: "cors",
