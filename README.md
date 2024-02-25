@@ -78,4 +78,4 @@ The use of HTTP cookies was not taught in the course, so I thought I could get a
 
 ### Bugs
 
--   When adding a profile picture, the user needs to press the button two times
+-   ~~When adding a profile picture, the user needs to press the button two times~~
