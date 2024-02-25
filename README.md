@@ -29,6 +29,7 @@ Notes:
 -   The client runs on port 3000
 -   The server runs on port 5000
 -   To run the tests use (npx cypress run)
+-   Keys are hardcoded. it is easier for the project reviewer to check the project
 
 ### Clone the Repository
 
