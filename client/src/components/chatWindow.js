@@ -1,26 +1,19 @@
 import React from "react";
-
+import Cookies from "js-cookie";
+import { useState, useEffect } from "react";
 import {
     Button,
     Box,
     Typography,
     Divider,
     Grid,
-    Avatar,
-    Paper,
-    Container,
-    Link,
-    CssBaseline,
     List,
     ListItem,
-    ListItemIcon,
     ListItemText,
     TextField,
 } from "@mui/material";
 
-import { useState, useEffect } from "react";
-
-const ChatWindow = ({ jwt, selectedChat }) => {
+const ChatWindow = ({ selectedChat }) => {
     const [messages, setMessages] = useState(null);
     const [message, setMessage] = useState("");
 
@@ -36,7 +29,7 @@ const ChatWindow = ({ jwt, selectedChat }) => {
         const response = await fetch(`/messages/get-messages/${selectedChat}`, {
             method: "GET",
             headers: {
-                Authorization: "bearer " + jwt,
+                Authorization: "bearer " + Cookies.get("token"),
             },
             mode: "cors",
         });
@@ -61,7 +54,7 @@ const ChatWindow = ({ jwt, selectedChat }) => {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
-                Authorization: "bearer " + jwt,
+                Authorization: "bearer " + Cookies.get("token"),
             },
             body: JSON.stringify(data),
             mode: "cors",

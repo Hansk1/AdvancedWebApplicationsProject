@@ -1,23 +1,23 @@
+import { useEffect, useState, useRef } from "react";
+import Cookies from "js-cookie";
 import {
     Container,
     Box,
-    Grid,
     Typography,
     Button,
     CssBaseline,
     Avatar,
     Paper,
-    Link,
 } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import { useEffect, useState, useRef } from "react";
 
-export default function SwipeBox({ jwt, user }) {
+export default function SwipeBox() {
     const [foundUser, setFoundUser] = useState(null);
     const [profilePicture, setProfilePicture] = useState(null);
+
+    // Retrieve user data from the cookie
+    const userDataCookie = Cookies.get("user");
+
+    const user = userDataCookie ? JSON.parse(userDataCookie) : null;
 
     useEffect(() => {
         dataFetch();
@@ -27,7 +27,7 @@ export default function SwipeBox({ jwt, user }) {
         let response = await fetch("/users/random", {
             method: "GET",
             headers: {
-                Authorization: "bearer " + jwt,
+                Authorization: "bearer " + Cookies.get("token"),
             },
             mode: "cors",
         });
@@ -44,7 +44,7 @@ export default function SwipeBox({ jwt, user }) {
                 {
                     method: "GET",
                     headers: {
-                        Authorization: "bearer " + jwt,
+                        Authorization: "bearer " + Cookies.get("token"),
                     },
                     mode: "cors",
                 }
@@ -79,7 +79,7 @@ export default function SwipeBox({ jwt, user }) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "bearer " + jwt,
+                Authorization: "bearer " + Cookies.get("token"),
             },
             body: JSON.stringify(data),
             mode: "cors",

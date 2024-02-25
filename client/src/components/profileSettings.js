@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 //Style for the file upload button:
 const VisuallyHiddenInput = styled("input")({
@@ -23,9 +24,15 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
-export default function ProfileSettings({ user, jwt }) {
+export default function ProfileSettings() {
     const [foundUser, setFoundUser] = useState(null);
     const [userData, setUserData] = useState([]);
+
+    // Retrieve user data from the cookie
+    const userDataCookie = Cookies.get("user");
+
+    // Parse user data if the cookie exists
+    const user = userDataCookie ? JSON.parse(userDataCookie) : null;
 
     // Fetch user data from the server when the component mounts
     useEffect(() => {
@@ -41,9 +48,6 @@ export default function ProfileSettings({ user, jwt }) {
         // Send a GET request to retrieve user data
         const response = await fetch("/users/userdata", {
             method: "GET",
-            headers: {
-                Authorization: "bearer " + jwt,
-            },
             mode: "cors",
         });
         // Parse the response as JSON
@@ -66,9 +70,6 @@ export default function ProfileSettings({ user, jwt }) {
             const picturePostResponsePromise = await fetch("/pictures/add", {
                 method: "POST",
                 body: formData,
-                headers: {
-                    Authorization: "bearer " + jwt,
-                },
                 mode: "cors",
             });
             const responseData = await picturePostResponsePromise.json();
@@ -83,7 +84,6 @@ export default function ProfileSettings({ user, jwt }) {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
-                Authorization: "bearer " + jwt,
             },
             body: JSON.stringify(userData),
             mode: "cors",

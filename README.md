@@ -69,9 +69,9 @@ The responsiveness of the application has been tested on a 430px screen.
 | React                    | 5      |
 | Swiping                  | 2      |
 | Profile Pictures         | 3      |
-| Timestamps               | 3      |
+| Timestamps               | 2      |
 | Unit testing (Automated) | 5      |
-| Total                    | 43     |
+| Total                    | 42     |
 
 ### Bugs
 

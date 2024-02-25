@@ -2,15 +2,14 @@ import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AppBar from "@mui/material/AppBar";
-
 import Toolbar from "@mui/material/Toolbar";
-
 import Link from "@mui/material/Link";
 import { Link as routerLink } from "react-router-dom";
-
 import { IconButton, Icon, Typography } from "@mui/material";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
-export default function TopBar() {
+export default function TopBar({ setUserData }) {
     //Menu button handling:
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -20,6 +19,16 @@ export default function TopBar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    //Handle the logout:
+    const navigate = useNavigate();
+    function logout() {
+        // Remove the JWT cookie using js-cookie
+        Cookies.remove("token");
+        Cookies.remove("user");
+        setUserData(null);
+        navigate("/login");
+    }
 
     return (
         <AppBar
@@ -72,8 +81,7 @@ export default function TopBar() {
                     >
                         Profile Settings
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>Images</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={logout}>Logout</MenuItem>
                 </Menu>
             </Toolbar>
         </AppBar>

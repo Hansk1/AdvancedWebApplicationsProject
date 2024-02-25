@@ -1,13 +1,16 @@
 import React from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
-import Divider from "@mui/material/Divider";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import {
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Avatar,
+    Divider,
+} from "@mui/material";
 
-const ChatList = ({ jwt, setSelectedChat }) => {
+const ChatList = ({ setSelectedChat }) => {
     const [chats, setChats] = useState(null);
     const [users, setUsers] = useState([]);
     const [userAvatars, setUserAvatars] = useState({});
@@ -25,7 +28,7 @@ const ChatList = ({ jwt, setSelectedChat }) => {
         const response = await fetch("/users/userdata", {
             method: "GET",
             headers: {
-                Authorization: "bearer " + jwt,
+                Authorization: "bearer " + Cookies.get("token"),
             },
             mode: "cors",
         });
@@ -43,7 +46,7 @@ const ChatList = ({ jwt, setSelectedChat }) => {
                     const response = await fetch(`/users/${userId}`, {
                         method: "GET",
                         headers: {
-                            Authorization: "Bearer " + jwt,
+                            Authorization: "Bearer " + Cookies.get("token"),
                         },
                         mode: "cors",
                     });
@@ -81,7 +84,7 @@ const ChatList = ({ jwt, setSelectedChat }) => {
         const response = await fetch("/pictures/" + pictureId, {
             method: "GET",
             headers: {
-                Authorization: "bearer " + jwt,
+                Authorization: "bearer " + Cookies.get("token"),
             },
             mode: "cors",
         });

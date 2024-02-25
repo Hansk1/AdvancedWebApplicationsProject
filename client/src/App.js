@@ -1,24 +1,37 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
-//Import page components:
+// Import page components:
 import SignIn from "./components/login";
 import Register from "./components/register";
 import SwipePage from "./components/swipePage";
 import ChatPage from "./components/chatPage";
 import ProfileSettingsPage from "./components/profileSettingsPage";
-import TopBar from "./components/TopBar";
 
 function App() {
-    //TODO: Add a way to store the jwt as an http cookie:
-    const [jwt, setJwt] = useState("");
-    const [user, setUser] = useState({});
+    // Retrieve user data from the cookie
+    const [userData, setUserData] = useState(() => {
+        const userDataCookie = Cookies.get("user");
+        return userDataCookie ? JSON.parse(userDataCookie) : null;
+    });
 
-    const ProtectedRoute = ({ user, children }) => {
-        if (!user?.id?.length > 0) {
-            return <Navigate to="/login" replace></Navigate>;
+    useEffect(() => {
+        // Update user data when it changes in the cookie
+        const userDataCookie = Cookies.get("user");
+        setUserData(userDataCookie ? JSON.parse(userDataCookie) : null);
+    }, []);
+
+    // Define the ProtectedRoute component
+    const ProtectedRoute = ({ children }) => {
+        if (!userData || !userData.id || !userData.id.length > 0) {
+            return <Navigate to="/login" replace />;
         }
         return children;
     };
@@ -30,33 +43,36 @@ function App() {
                     <Route
                         path="/"
                         element={
-                            <ProtectedRoute user={user}>
-                                <SwipePage jwt={jwt} user={user} />
+                            <ProtectedRoute>
+                                <SwipePage setUserData={setUserData} />
                             </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/chat"
                         element={
-                            <ProtectedRoute user={user}>
-                                <ChatPage jwt={jwt} />
+                            <ProtectedRoute>
+                                <ChatPage setUserData={setUserData} />
                             </ProtectedRoute>
                         }
                     />
-
                     <Route
                         path="/settings"
                         element={
-                            <ProtectedRoute user={user}>
-                                <ProfileSettingsPage user={user} jwt={jwt} />
+                            <ProtectedRoute>
+                                <ProfileSettingsPage
+                                    setUserData={setUserData}
+                                />
                             </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/login"
                         element={
-                            !user?.id?.length > 0 ? (
-                                <SignIn setJwt={setJwt} setUser={setUser} />
+                            !userData ||
+                            !userData.id ||
+                            !userData.id.length > 0 ? (
+                                <SignIn />
                             ) : (
                                 <Navigate to="/" />
                             )
@@ -65,7 +81,9 @@ function App() {
                     <Route
                         path="/register"
                         element={
-                            !user?.id?.length > 0 ? (
+                            !userData ||
+                            !userData.id ||
+                            !userData.id.length > 0 ? (
                                 <Register />
                             ) : (
                                 <Navigate to="/" />

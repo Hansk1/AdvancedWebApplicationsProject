@@ -6,8 +6,18 @@ const passport = require("passport");
 require("dotenv").config();
 
 var opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+
 opts.secretOrKey = "ABCD123";
+
+opts.jwtFromRequest = function (req) {
+    var token = null;
+    console.log(req.cookies);
+    if (req && req.cookies) {
+        token = req.cookies.token;
+    }
+    return token;
+};
+
 passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
         User.findOne({ _id: jwt_payload.id }, function (err, user) {
