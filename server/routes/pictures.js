@@ -17,7 +17,6 @@ router.get(
     passport.authenticate("jwt", { session: false }),
     (req, res, next) => {
         const pictureId = req.params.pictureId;
-        console.log(pictureId);
         ProfilePicture.findOne({ _id: pictureId }, (err, img) => {
             if (err) return next(err);
             if (img) {

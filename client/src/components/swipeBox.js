@@ -85,7 +85,6 @@ export default function SwipeBox() {
         });
 
         const responseData = await response.json();
-        console.log(responseData);
 
         dataFetch();
     };

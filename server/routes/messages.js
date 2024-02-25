@@ -1,14 +1,8 @@
 var express = require("express");
 const passport = require("../auth/validateToken");
-const User = require("../models/User");
 const Message = require("../models/Message");
-const bcrypt = require("bcryptjs");
-const { body, validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 var router = express.Router();
+const moment = require("moment");
 
 // Add message
 router.post(
@@ -20,7 +14,7 @@ router.post(
                 sender: req.user._id,
                 receiver: req.body.receiver,
                 content: req.body.content,
-                date: req.body.date,
+                date: moment().format("DD.MM, HH:mm"),
             });
             return res.json({ success: true });
         } catch (error) {

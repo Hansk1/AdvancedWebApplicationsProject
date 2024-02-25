@@ -33,7 +33,6 @@ const ChatWindow = ({ selectedChat }) => {
 
         const responseData = await response.json();
         if (responseData.messages) {
-            console.log(responseData);
             setMessages(responseData.messages);
         }
     };
@@ -43,7 +42,6 @@ const ChatWindow = ({ selectedChat }) => {
         const data = {
             receiver: selectedChat,
             content: message,
-            date: new Date(),
         };
         event.preventDefault();
         // Send a POST request to update user data
