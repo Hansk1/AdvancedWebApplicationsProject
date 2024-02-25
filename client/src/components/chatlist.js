@@ -97,12 +97,8 @@ const ChatList = ({ setSelectedChat }) => {
     return (
         <List>
             {users.map((user) => (
-                <>
-                    <ListItem
-                        button
-                        key={user._id}
-                        onClick={() => handleUserSelect(user._id)}
-                    >
+                <React.Fragment key={user._id}>
+                    <ListItem onClick={() => handleUserSelect(user._id)}>
                         <ListItemIcon
                             sx={{ display: { xs: "none", md: "inline" } }}
                         >
@@ -116,7 +112,7 @@ const ChatList = ({ setSelectedChat }) => {
                         />
                     </ListItem>
                     <Divider orientation="horizontal" flexItem />
-                </>
+                </React.Fragment>
             ))}
         </List>
     );

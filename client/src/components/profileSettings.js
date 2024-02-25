@@ -62,9 +62,13 @@ export default function ProfileSettings() {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        //Upload the profile picture:
+        // Initialize responseData
+        let responseData = {};
+
+        const formData = new FormData();
+
+        // Upload the profile picture if it exists in the state
         if (userData.profilePicture) {
-            const formData = new FormData();
             formData.append("profilePicture", userData.profilePicture);
 
             const picturePostResponsePromise = await fetch("/pictures/add", {
@@ -72,28 +76,37 @@ export default function ProfileSettings() {
                 body: formData,
                 mode: "cors",
             });
-            const responseData = await picturePostResponsePromise.json();
-            setUserData({
-                ...userData,
+            responseData = await picturePostResponsePromise.json();
+            // Update the userData state with the new pictureId
+            setUserData((prevUserData) => ({
+                ...prevUserData,
                 profilePictureId: responseData.pictureId,
-            });
+            }));
         }
 
         // Send a POST request to update user data
+        const updatedUserData = {
+            ...userData,
+            // If profile picture was uploaded, update the profilePictureId in userData
+            // Otherwise, use the existing profilePictureId
+            profilePictureId: userData.profilePicture
+                ? responseData.pictureId
+                : userData.profilePictureId,
+        };
         const dataPromise = await fetch("/users/update-user", {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
             },
-            body: JSON.stringify(userData),
+            body: JSON.stringify(updatedUserData),
             mode: "cors",
         });
 
         // Parse the response as JSON
-        const responseData = await dataPromise.json();
+        const userDataResponse = await dataPromise.json();
 
-        if (responseData.foundUser) {
-            setFoundUser(...userData, responseData.foundUser);
+        if (userDataResponse.foundUser) {
+            setFoundUser(...userData, userDataResponse.foundUser);
         }
     }
 
@@ -101,7 +114,10 @@ export default function ProfileSettings() {
     const handleChange = (e) => {
         if (e.target.type === "file") {
             // Update the userData state with the new input value
-            setUserData({ ...userData, profilePicture: e.target.files[0] });
+            setUserData((prevUserData) => ({
+                ...prevUserData,
+                profilePicture: e.target.files[0],
+            }));
         } else {
             // Update the userData state with the new input value
             setUserData({ ...userData, [e.target.name]: e.target.value });

@@ -23,6 +23,10 @@ export default function SwipeBox() {
         dataFetch();
     }, []);
 
+    useEffect(() => {
+        fetchPicture();
+    }, [foundUser]);
+
     const dataFetch = async () => {
         let response = await fetch("/users/random", {
             method: "GET",
@@ -34,16 +38,18 @@ export default function SwipeBox() {
         if (responseData.foundUser) {
             setFoundUser(responseData.foundUser);
         }
+    };
 
-        if (responseData.foundUser.profilePicture) {
-            response = await fetch(
-                "/pictures/" + responseData.foundUser.profilePicture,
+    const fetchPicture = async () => {
+        if (foundUser && foundUser.profilePicture) {
+            const response = await fetch(
+                "/pictures/" + foundUser.profilePicture,
                 {
                     method: "GET",
                     mode: "cors",
                 }
             );
-            responseData = await response.json();
+            const responseData = await response.json();
             const imgBuffer = responseData.imgbuffer;
 
             const blob = new Blob([new Uint8Array(imgBuffer.data)]);
